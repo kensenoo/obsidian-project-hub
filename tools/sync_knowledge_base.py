@@ -5,6 +5,8 @@ from __future__ import annotations
 
 import re
 import sqlite3
+import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -89,6 +91,8 @@ def main() -> None:
     count = connection.execute("SELECT count(*) FROM documents").fetchone()[0]
     connection.close()
     print(f"已同步 {count} 篇笔记到 {DB_PATH.relative_to(ROOT)}")
+    if "--publish" in sys.argv[1:]:
+        subprocess.run([sys.executable, str(ROOT / "tools" / "publish_knowledge_base.py")], check=True)
 
 
 if __name__ == "__main__":
